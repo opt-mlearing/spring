@@ -34,9 +34,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.AbstractUnmarshallerTests;
-import org.springframework.oxm.jaxb.test.FlightType;
-import org.springframework.oxm.jaxb.test.Flights;
+import org.springframework.oxm.jibx.FlightType;
 import org.springframework.oxm.mime.MimeContainer;
+import org.springframework.oxm.xstream.Flights;
 import org.springframework.util.xml.StaxUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,8 +66,8 @@ public class Jaxb2UnmarshallerTests extends AbstractUnmarshallerTests<Jaxb2Marsh
 	protected void testFlights(Object o) {
 		Flights flights = (Flights) o;
 		assertThat(flights).as("Flights is null").isNotNull();
-		assertThat(flights.getFlight().size()).as("Invalid amount of flight elements").isEqualTo(1);
-		testFlight(flights.getFlight().get(0));
+		assertThat(flights.getFlights().size()).as("Invalid amount of flight elements").isEqualTo(1);
+		testFlight(flights.getFlights().get(0));
 	}
 
 	@Override
@@ -129,7 +129,7 @@ public class Jaxb2UnmarshallerTests extends AbstractUnmarshallerTests<Jaxb2Marsh
 	public void unmarshalAnXmlReferingToAWrappedXmlElementDecl() throws Exception {
 		// SPR-10714
 		unmarshaller = new Jaxb2Marshaller();
-		unmarshaller.setPackagesToScan(new String[] { "org.springframework.oxm.jaxb" });
+		unmarshaller.setPackagesToScan(new String[]{"org.springframework.oxm.jaxb"});
 		unmarshaller.afterPropertiesSet();
 		Source source = new StreamSource(new StringReader(
 				"<brand-airplane><name>test</name></brand-airplane>"));

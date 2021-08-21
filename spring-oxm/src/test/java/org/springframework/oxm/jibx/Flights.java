@@ -30,6 +30,10 @@ public class Flights {
 		return flightList.get(index);
 	}
 
+	public ArrayList<FlightType> getFlights() {
+		return flightList;
+	}
+
 	public int sizeFlightList() {
 		return flightList.size();
 	}
