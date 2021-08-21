@@ -363,7 +363,7 @@ public interface BeanFactory {
 	Class<?> getType(String name, boolean allowFactoryBeanInit) throws NoSuchBeanDefinitionException;
 
 	/**
-	 * Return the aliases for the given bean name, if any.
+	 * Return the aliases别名 for the given bean name, if any.
 	 * <p>All of those aliases point to the same bean when used in a {@link #getBean} call.
 	 * <p>If the given name is an alias, the corresponding original bean name
 	 * and other aliases (if any) will be returned, with the original bean name
