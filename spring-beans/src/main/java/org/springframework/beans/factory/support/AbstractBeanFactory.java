@@ -274,7 +274,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	/**
 	 * Return an instance, which may be shared or independent, of the specified bean.
 	 *
-	 * @param name          the name of the bean to retrieve
+	 * @param name          the name of the bean to retrieve检索
 	 * @param requiredType  the required type of the bean to retrieve
 	 * @param args          arguments to use when creating a bean instance using explicit arguments
 	 *                      (only applied when creating a new instance as opposed to retrieving an existing one)
@@ -366,7 +366,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						try {
 							return createBean(beanName, mbd, args);
 						} catch (BeansException ex) {
-							// Explicitly remove instance from singleton cache: It might have been put there
+							// Explicitly「明确的」 remove instance from singleton cache: It might have been put there
 							// eagerly by the creation process, to allow for circular reference resolution.
 							// Also remove any beans that received a temporary reference to the bean.
 							destroySingleton(beanName);
@@ -1873,6 +1873,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 		// Don't let calling code try to dereference the factory if the bean isn't a factory.
 		if (BeanFactoryUtils.isFactoryDereference(name)) {
+			// 只有工厂Bean才会进行此处
 			if (beanInstance instanceof NullBean) {
 				return beanInstance;
 			}

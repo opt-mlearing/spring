@@ -27,6 +27,8 @@ package org.springframework.beans.factory;
  * {@link org.springframework.beans.factory.config.BeanPostProcessor}.
  * Refer to {@link org.springframework.context.support.ApplicationContextAwareProcessor}
  * for an example of processing specific {@code *Aware} interface callbacks.
+ * <p>
+ * Aware自动装配的顶级标记接口.
  *
  * @author Chris Beams
  * @author Juergen Hoeller

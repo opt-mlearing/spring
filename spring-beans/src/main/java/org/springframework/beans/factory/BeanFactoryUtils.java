@@ -85,6 +85,7 @@ public abstract class BeanFactoryUtils {
 		}
 		return transformedBeanNameCache.computeIfAbsent(name, beanName -> {
 			do {
+				// 若是 「&」+「xxxBeanName」,则截取对应的bean name
 				beanName = beanName.substring(BeanFactory.FACTORY_BEAN_PREFIX.length());
 			}
 			while (beanName.startsWith(BeanFactory.FACTORY_BEAN_PREFIX));
@@ -107,13 +108,14 @@ public abstract class BeanFactoryUtils {
 
 	/**
 	 * Extract the "raw" bean name from the given (potentially generated) bean name,
-	 * excluding any "#..." suffixes which might have been added for uniqueness.
+	 * excluding any "#..." suffixes后缀 which might have been added for uniqueness.
 	 * @param name the potentially generated bean name
 	 * @return the raw bean name
 	 * @see #GENERATED_BEAN_NAME_SEPARATOR
 	 */
 	public static String originalBeanName(String name) {
 		Assert.notNull(name, "'name' must not be null");
+		// 获取「#」作为截止标记
 		int separatorIndex = name.indexOf(GENERATED_BEAN_NAME_SEPARATOR);
 		return (separatorIndex != -1 ? name.substring(0, separatorIndex) : name);
 	}
