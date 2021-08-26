@@ -39,6 +39,9 @@ import org.springframework.util.StringValueResolver;
  * @author Juergen Hoeller
  * @author Qimiao Chen
  * @since 2.5.2
+ * 是一个非常底层的容器组件
+ * <p>SimpleAliasRegistry是AliasRegistry的直接实现类，其内部采用一个CurrentHashMap结构作为alias的存储</p>
+ * <p>SimpleAliasRegistry比较著名的超类有：DefaultListableBeanFactory、DefaultSingletonBeanRegistry、FactoryBeanRegistrySupport</p>
  */
 public class SimpleAliasRegistry implements AliasRegistry {
 
@@ -46,6 +49,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	/** Map from alias to canonical name. */
+	/** 注意：key-->alias/ value-->name */
 	private final Map<String, String> aliasMap = new ConcurrentHashMap<>(16);
 
 
@@ -55,6 +59,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 		Assert.hasText(alias, "'alias' must not be empty");
 		synchronized (this.aliasMap) {
 			if (alias.equals(name)) {
+				/** 若已经存在注册的alias，则删除，避免歧义 */
 				this.aliasMap.remove(alias);
 				if (logger.isDebugEnabled()) {
 					logger.debug("Alias definition '" + alias + "' ignored since it points to same name");
@@ -77,6 +82,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 					}
 				}
 				checkForAliasCircle(name, alias);
+				/** 所谓注册过程就是把 <key:alias,value:name> 放入到Map中. */
 				this.aliasMap.put(alias, name);
 				if (logger.isTraceEnabled()) {
 					logger.trace("Alias definition '" + alias + "' registered for name '" + name + "'");

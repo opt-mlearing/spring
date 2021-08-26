@@ -51,7 +51,7 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @see #getResource
  * @see #getResourceByPath
- * @see GenericApplicationContext
+ * @see GenericApplicationContext --> xml分析
  */
 public class FileSystemXmlApplicationContext extends AbstractXmlApplicationContext {
 

@@ -22,6 +22,11 @@ package org.springframework.core;
  *
  * @author Juergen Hoeller
  * @since 2.5.2
+ * <p>定义对bean别名的相关操作</p>
+ * registerAlias -->  注册
+ * removeAlias   -->  删除
+ * isAlias       -->  是否存在
+ * getAliases    -->  获取
  */
 public interface AliasRegistry {
 

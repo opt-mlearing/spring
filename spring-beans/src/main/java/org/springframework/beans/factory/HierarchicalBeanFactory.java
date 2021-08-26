@@ -31,6 +31,9 @@ import org.springframework.lang.Nullable;
  * @since 07.07.2003
  * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#setParentBeanFactory
  */
+/** 扩展BeanFactory的基础功能，增加对parentBeanFactory的引用获取，这样在子类中可根据需要加载parentBeanFactory的信息.
+ *  譬如：environment、classLoader等信息.
+ */
 public interface HierarchicalBeanFactory extends BeanFactory {
 
 	/**

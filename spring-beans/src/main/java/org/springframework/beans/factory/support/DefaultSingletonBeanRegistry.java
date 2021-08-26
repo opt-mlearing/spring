@@ -68,28 +68,32 @@ import org.springframework.util.StringUtils;
  * @see org.springframework.beans.factory.DisposableBean
  * @see org.springframework.beans.factory.config.ConfigurableBeanFactory
  */
+/** bean的别名管理功能是一个注册器的基础功能，这里使用继承的方式获得的别名的管理功能，
+ * 当然也可以采用关联或聚合等其他方式获取SimpleAliasRegistry的别名管理功能.
+ */
 public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements SingletonBeanRegistry {
 
 	/** Maximum number of suppressed exceptions to preserve. */
 	private static final int SUPPRESSED_EXCEPTIONS_LIMIT = 100;
 
 
-	/** Cache of singleton objects: bean name to bean instance.
-	 * 一级缓存，存储所有创建好的单例bean*/
+	/** Cache of singleton objects: bean name to bean instance. */
+	/** 一级缓存，存储所有创建好的单例bean */
 	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
 
-	/** Cache of early singleton objects: bean name to bean instance.
-	 * 二级缓存，存储已经完成实例化，但还未进行属性注入及初始化步骤的对象 */
+	/** Cache of early singleton objects: bean name to bean instance. */
+	/** 二级缓存，存储已经完成实例化，但还未进行属性注入及初始化步骤的对象 */
 	private final Map<String, Object> earlySingletonObjects = new ConcurrentHashMap<>(16);
 
-	/** Cache of singleton factories: bean name to ObjectFactory.
-	 * 三级缓存，提前暴露的单例工厂 */
+	/** Cache of singleton factories: bean name to ObjectFactory. */
+	/** 三级缓存，提前暴露的单例工厂 */
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 
 	/** Set of registered singletons, containing the bean names in registration order. */
 	private final Set<String> registeredSingletons = new LinkedHashSet<>(256);
 
-	/** Names of beans that are currently in creation. 存储正在创建期的单例 */
+	/** Names of beans that are currently in creation. */
+	/** 存储正在创建期的单例 */
 	private final Set<String> singletonsCurrentlyInCreation =
 			Collections.newSetFromMap(new ConcurrentHashMap<>(16));
 
