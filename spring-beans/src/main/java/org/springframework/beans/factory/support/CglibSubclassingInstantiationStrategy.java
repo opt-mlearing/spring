@@ -41,7 +41,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
- * Default object instantiation strategy for use in BeanFactories.
+ * Default object instantiation『实例化』 strategy for use in BeanFactories.
  *
  * <p>Uses CGLIB to generate subclasses dynamically if methods need to be
  * overridden by the container to implement <em>Method Injection</em>.
@@ -51,6 +51,7 @@ import org.springframework.util.StringUtils;
  * @author Sam Brannen
  * @since 1.1
  */
+/** 使用cglib技术进行对象实例化 */
 public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationStrategy {
 
 	/**
@@ -89,6 +90,9 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 	/**
 	 * An inner class created for historical reasons to avoid external CGLIB dependency
 	 * in Spring versions earlier than 3.2.
+	 */
+	/** 使用cglib技术实例化对象，『小知识点』若是希望cglib帮你完成实例化，需要保证你需要实例的化的原来类一定不能使用 final修饰。
+	 *  因为cglib进行类增强的本质是继承，譬如我们使用cglib获取到的对象你需要实例化类的子类.
 	 */
 	private static class CglibSubclassCreator {
 
@@ -142,9 +146,12 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 		 * Create an enhanced subclass of the bean class for the provided bean
 		 * definition, using CGLIB.
 		 */
+		/** so，cglib要开始了 */
 		private Class<?> createEnhancedSubclass(RootBeanDefinition beanDefinition) {
+			/** Enhancer这个命名很形象，类增强 */
 			Enhancer enhancer = new Enhancer();
 			enhancer.setSuperclass(beanDefinition.getBeanClass());
+			/** 动态生成类的命名控制，在Spring-frame-core里面全都是『BySpringCGLIB』 */
 			enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
 			if (this.owner instanceof ConfigurableBeanFactory) {
 				ClassLoader cl = ((ConfigurableBeanFactory) this.owner).getBeanClassLoader();
@@ -189,6 +196,11 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 
 	/**
 	 * CGLIB callback for filtering method interception behavior.
+	 */
+	/**
+	 * cglib的方法注入可分为两种：
+	 * 查找方法注入:用于注入方法返回结果，也就是说能通过配配置方式替换方法返回结果，也就是说能通过配置的方式替换方法返回的结果，即通常所说的lookup-method注入;
+	 * 替换方法注入:可以实现方法主体或返回结果的替换，即通常所说的 replace-method注入;
 	 */
 	private static class MethodOverrideCallbackFilter extends CglibIdentitySupport implements CallbackFilter {
 

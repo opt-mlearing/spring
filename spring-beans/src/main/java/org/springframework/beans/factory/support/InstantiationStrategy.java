@@ -33,6 +33,7 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @since 1.1
  */
+/** 对象实例化策略的顶层接口，定义基础的对象实例化功能，其实功能只有实例化对象，根据不同的入参都适配不同的场景使用 */
 public interface InstantiationStrategy {
 
 	/**
@@ -50,15 +51,15 @@ public interface InstantiationStrategy {
 
 	/**
 	 * Return an instance of the bean with the given name in this factory,
-	 * creating it via the given constructor.
+	 * creating it via the given constructor. 『通过给定的构造方法创建实例』
 	 * @param bd the bean definition
 	 * @param beanName the name of the bean when it is created in this context.
 	 * The name can be {@code null} if we are autowiring a bean which doesn't
 	 * belong to the factory.
 	 * @param owner the owning BeanFactory
-	 * @param ctor the constructor to use
-	 * @param args the constructor arguments to apply
-	 * @return a bean instance for this bean definition
+	 * @param ctor the constructor to use --> 提供实例化的构造方法
+	 * @param args the constructor arguments to apply --> 实例化构造方法对应的入参
+	 * @return a bean instance for this bean definition --> 返回的实例
 	 * @throws BeansException if the instantiation attempt failed
 	 */
 	Object instantiate(RootBeanDefinition bd, @Nullable String beanName, BeanFactory owner,
@@ -66,7 +67,7 @@ public interface InstantiationStrategy {
 
 	/**
 	 * Return an instance of the bean with the given name in this factory,
-	 * creating it via the given factory method.
+	 * creating it via the given factory method. 『通过给定的工厂方法创建实例』
 	 * @param bd the bean definition
 	 * @param beanName the name of the bean when it is created in this context.
 	 * The name can be {@code null} if we are autowiring a bean which doesn't
