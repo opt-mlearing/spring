@@ -49,6 +49,7 @@ import org.springframework.util.StringValueResolver;
  * @see org.springframework.beans.factory.ListableBeanFactory
  * @see ConfigurableListableBeanFactory
  */
+/** 提供配置Factory的各种方法 */
 public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, SingletonBeanRegistry {
 
 	/**
@@ -98,12 +99,12 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	ClassLoader getBeanClassLoader();
 
 	/**
-	 * Specify a temporary ClassLoader to use for type matching purposes.
-	 * Default is none, simply using the standard bean ClassLoader.
+	 * Specify a temporary『暂时的，临时的』 ClassLoader to use for type matching purposes.
+	 * Default is none, simply using the standard『标准』 bean ClassLoader.
 	 * <p>A temporary ClassLoader is usually just specified if
 	 * <i>load-time weaving</i> is involved, to make sure that actual bean
 	 * classes are loaded as lazily as possible. The temporary loader is
-	 * then removed once the BeanFactory completes its bootstrap phase.
+	 * then removed once『移除』the BeanFactory completes its bootstrap phase.
 	 * @since 2.5
 	 */
 	void setTempClassLoader(@Nullable ClassLoader tempClassLoader);
@@ -211,6 +212,7 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	TypeConverter getTypeConverter();
 
 	/**
+	 * 获取annotation的配置属性
 	 * Add a String resolver for embedded values such as annotation attributes.
 	 * @param valueResolver the String resolver to apply to embedded values
 	 * @since 3.0

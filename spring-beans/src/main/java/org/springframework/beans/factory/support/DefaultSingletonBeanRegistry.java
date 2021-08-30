@@ -70,12 +70,14 @@ import org.springframework.util.StringUtils;
  */
 /** bean的别名管理功能是一个注册器的基础功能，这里使用继承的方式获得的别名的管理功能，
  * 当然也可以采用关联或聚合等其他方式获取SimpleAliasRegistry的别名管理功能.
+ * DefaultSingletonBeanRegistry已经具备一个高级bean容器的基本的功能（此时的bean暂不区分是工厂还是非工厂的bean），
+ * 如要明确区分工厂beanRegistry，那么DefaultSingletonBeanRegistry的扩展子类-->FactoryBeanRegistrySupport
+ * 是一个典型的针对FactoryBean的增强处理实现.
  */
 public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements SingletonBeanRegistry {
 
 	/** Maximum number of suppressed exceptions to preserve. */
 	private static final int SUPPRESSED_EXCEPTIONS_LIMIT = 100;
-
 
 	/** Cache of singleton objects: bean name to bean instance. */
 	/** 一级缓存，存储所有创建好的单例bean */
@@ -371,7 +373,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
-	 * 检验@param beanName是否在创建期，若否则尝试加入到创建期间中.
+	 * 回调用方法：检验@param beanName是否在创建期，若否则尝试加入到创建期间中.
 	 * Callback before singleton creation.
 	 * <p>The default implementation register the singleton as currently in creation.
 	 * @param beanName the name of the singleton about to be created
@@ -384,6 +386,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
+	 * 回调方法：在{@link org.springframework.beans.factory.support.DefaultSingletonBeanRegistry#singletonsCurrentlyInCreation}
+	 * 中成功删除，表示完成单例对象的创建.
 	 * Callback after singleton creation.
 	 * <p>The default implementation marks the singleton as not in creation anymore.
 	 * @param beanName the name of the singleton that has been created

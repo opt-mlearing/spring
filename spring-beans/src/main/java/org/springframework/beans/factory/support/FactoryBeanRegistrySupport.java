@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanCurrentlyInCreationException;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.FactoryBeanNotInitializedException;
 import org.springframework.lang.Nullable;
@@ -41,8 +42,12 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @since 2.5.1
  */
+/** FactoryBeanRegistrySupport在DefaultSingletonBeanRegistry的基础上增强对FactoryBean的特殊处理 */
 public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanRegistry {
 
+	/** 其数据结构同 {@link org.springframework.beans.factory.support.DefaultSingletonBeanRegistry#singletonObjects}
+	 *  区别在与ConcurrentHashMap的容量大小.
+	 */
 	/** Cache of singleton objects created by FactoryBeans: FactoryBean name to object. */
 	private final Map<String, Object> factoryBeanObjectCache = new ConcurrentHashMap<>(16);
 
@@ -74,7 +79,8 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 
 	/**
 	 * Obtain an object to expose from the given FactoryBean, if available
-	 * in cached form. Quick check for minimal synchronization.
+	 * in cached form. Quick check for minimal synchronization
+	 * [所谓的synchronization，得益于factoryBeanObjectCache使用的CurrentHashMap集合类是桶锁，且线程安全].
 	 * @param beanName the name of the bean
 	 * @return the object obtained from the FactoryBean,
 	 * or {@code null} if not available
@@ -84,6 +90,23 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 		return this.factoryBeanObjectCache.get(beanName);
 	}
 
+	/**
+	 * from --> https://www.cnblogs.com/aspirant/p/9082858.html
+	 * 注意：这里强调一下<p>BeanFactory</p>和<p>FactoryBean</p>，
+	 * @see BeanFactory 是一个接口（一个工厂类），为IOC容器最基本的形式，给具体IOC容器的实现提供规范（接口就是一种规范）
+	 * BeanFactory，以Factory结尾，表示它是一个工厂类(接口)， 它负责生产和管理bean的一个工厂。
+	 * 在Spring中，BeanFactory是IOC容器的核心接口，它的职责包括：实例化、定位、配置应用程序中的对象及建立这些对象间的依赖。
+	 * BeanFactory只是个接口，并不是IOC容器的具体实现，但是Spring容器给出了很多种实现，如
+	 * DefaultListableBeanFactory、XmlBeanFactory、ApplicationContext等，其中XmlBeanFactory就是常用的一个，
+	 * 该实现将以XML方式描述组成应用的对象及对象间的依赖关系。XmlBeanFactory类将持有此XML配置元数据，并用它来构建一个完全可配置的系统或应用。
+	 * <p></p>
+	 * @see FactoryBean 也是接口，为IOC容器中Bean的实现提供更加灵活的方式，FactoryBean在IOC容器的基础上给Bean的实现加上一个简单的
+	 * 工厂模式或者装饰器模式的。在Spring中，所有的bean都是由BeanFactory(IOC容器)来进行管理的
+	 * 『但是』对FactoryBean而言，这个Bean不是简单的Bean，而是一个能生产或者装饰对象的工厂bean.
+	 * 以Bean结尾，表示它是一个Bean，不同于普通Bean的是：它是实现了FactoryBean<T>接口的Bean，
+	 * 根据该Bean的ID从BeanFactory中获取的实际上是FactoryBean的getObject()返回的对象，
+	 * 而不是FactoryBean本身，如果要获取FactoryBean对象，请在id前面加一个&符号来获取。
+	 */
 	/**
 	 * Obtain an object to expose from the given FactoryBean.
 	 * @param factory the FactoryBean instance
@@ -95,14 +118,18 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 	 */
 	protected Object getObjectFromFactoryBean(FactoryBean<?> factory, String beanName, boolean shouldPostProcess) {
 		if (factory.isSingleton() && containsSingleton(beanName)) {
+			/** synchronized锁的对象就是父类中存储单例对象 --> {@link DefaultSingletonBeanRegistry#singletonObjects} */
 			synchronized (getSingletonMutex()) {
+				/** 从缓存的单例工厂bean集合中获取FactoryBean */
 				Object object = this.factoryBeanObjectCache.get(beanName);
 				if (object == null) {
+					/** 如何FactoryBean不存在 */
 					object = doGetObjectFromFactoryBean(factory, beanName);
 					// Only post-process and store if not put there already during getObject() call above
 					// (e.g. because of circular reference processing triggered by custom getBean calls)
 					Object alreadyThere = this.factoryBeanObjectCache.get(beanName);
 					if (alreadyThere != null) {
+						/** 获取到BeanFactory */
 						object = alreadyThere;
 					}
 					else {
@@ -113,6 +140,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 							}
 							beforeSingletonCreation(beanName);
 							try {
+								/** 调用bean一系列的BeanPostProcessors过程，进行Bean装配*/
 								object = postProcessObjectFromFactoryBean(object, beanName);
 							}
 							catch (Throwable ex) {
@@ -120,10 +148,12 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 										"Post-processing of FactoryBean's singleton object failed", ex);
 							}
 							finally {
+								/** 单例bean创建完成 */
 								afterSingletonCreation(beanName);
 							}
 						}
 						if (containsSingleton(beanName)) {
+							/** 将FactoryBean放到（注册到）{@link FactoryBeanRegistrySupport#factoryBeanObjectCache}中 */
 							this.factoryBeanObjectCache.put(beanName, object);
 						}
 					}
@@ -132,6 +162,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 			}
 		}
 		else {
+			/** FactoryBean */
 			Object object = doGetObjectFromFactoryBean(factory, beanName);
 			if (shouldPostProcess) {
 				try {
@@ -155,6 +186,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 	 */
 	private Object doGetObjectFromFactoryBean(FactoryBean<?> factory, String beanName) throws BeanCreationException {
 		Object object;
+		/** 获取FactoryBean */
 		try {
 			if (System.getSecurityManager() != null) {
 				AccessControlContext acc = getAccessControlContext();
@@ -183,6 +215,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 				throw new BeanCurrentlyInCreationException(
 						beanName, "FactoryBean which is currently in creation returned null from getObject");
 			}
+			/** null对应的bean的包装类型实例 */
 			object = new NullBean();
 		}
 		return object;

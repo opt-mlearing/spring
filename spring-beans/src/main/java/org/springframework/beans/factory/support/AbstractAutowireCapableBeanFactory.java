@@ -336,6 +336,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	public void autowireBean(Object existingBean) {
 		// Use non-singleton bean definition, to avoid registering bean as dependent bean.
 		RootBeanDefinition bd = new RootBeanDefinition(ClassUtils.getUserClass(existingBean));
+		/** 注意：scope设置的为『prototype』*/
 		bd.setScope(SCOPE_PROTOTYPE);
 		bd.allowCaching = ClassUtils.isCacheSafe(bd.getBeanClass(), getBeanClassLoader());
 		BeanWrapper bw = new BeanWrapperImpl(existingBean);

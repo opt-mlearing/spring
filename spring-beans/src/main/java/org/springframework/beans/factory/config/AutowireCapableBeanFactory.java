@@ -59,6 +59,7 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.beans.factory.config.ConfigurableListableBeanFactory
  * @see org.springframework.context.ApplicationContext#getAutowireCapableBeanFactory()
  */
+/** 提供创建bean、自动注入、初始化以及应用bean的后处理器 */
 public interface AutowireCapableBeanFactory extends BeanFactory {
 
 	/**
@@ -128,7 +129,7 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	 * Fully create a new bean instance of the given class.
 	 * <p>Performs full initialization of the bean, including all applicable
 	 * {@link BeanPostProcessor BeanPostProcessors}.
-	 * <p>Note: This is intended for creating a fresh instance, populating annotated
+	 * <p>Note: This is intended for creating a fresh『新的』 instance, populating annotated
 	 * fields and methods as well as applying all standard bean initialization callbacks.
 	 * It does <i>not</i> imply traditional by-name or by-type autowiring of properties;
 	 * use {@link #createBean(Class, int, boolean)} for those purposes.
@@ -136,6 +137,7 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	 * @return the new bean instance
 	 * @throws BeansException if instantiation or wiring failed
 	 */
+	/** 创建完全的bean，bean已经完全初始化且装配完毕 */
 	<T> T createBean(Class<T> beanClass) throws BeansException;
 
 	/**
@@ -148,6 +150,7 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	 * @param existingBean the existing bean instance
 	 * @throws BeansException if wiring failed
 	 */
+	/** bean属性的自动化装配 */
 	void autowireBean(Object existingBean) throws BeansException;
 
 	/**

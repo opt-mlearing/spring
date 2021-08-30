@@ -101,8 +101,8 @@ import org.springframework.util.StringValueResolver;
  * hierarchy (delegating to the parent in case of an unknown bean), through implementing
  * the {@link org.springframework.beans.factory.HierarchicalBeanFactory} interface.
  *
- * <p>The main template methods to be implemented by subclasses are
- * {@link #getBeanDefinition} and {@link #createBean}, retrieving a bean definition
+ * <p>The main template methods『重点』 to be implemented by subclasses are
+ * {@link #getBeanDefinition} and {@link #createBean}, retrieving『检索』 a bean definition
  * for a given bean name and creating a bean instance for a given bean definition,
  * respectively. Default implementations of those operations can be found in
  * {@link DefaultListableBeanFactory} and {@link AbstractAutowireCapableBeanFactory}.
@@ -117,6 +117,11 @@ import org.springframework.util.StringValueResolver;
  * @see AbstractAutowireCapableBeanFactory#createBean
  * @see DefaultListableBeanFactory#getBeanDefinition
  * @since 15 April 2001
+ */
+/** 综合FactoryBeanRegistrySupport和ConfigurableBeanFactory的功能，注意其两个使用频率高的扩展子类，
+ * @see DefaultListableBeanFactory
+ * @see AbstractAutowireCapableBeanFactory
+ *
  */
 public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport implements ConfigurableBeanFactory {
 
