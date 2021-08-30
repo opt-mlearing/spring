@@ -139,7 +139,7 @@ public class AnnotatedBeanDefinitionReader {
 	}
 
 	/**
-	 * Register a bean from the given bean class, deriving its metadata from
+	 * Register a bean from the given bean class, deriving『源于』 its metadata from
 	 * class-declared annotations.
 	 * @param beanClass the class of the bean
 	 */
@@ -234,7 +234,7 @@ public class AnnotatedBeanDefinitionReader {
 	}
 
 	/**
-	 * Register a bean from the given bean class, deriving its metadata from
+	 * Register a bean from the given bean class, deriving its metadata from『源于annotation class的元数据信息』
 	 * class-declared annotations.
 	 * @param beanClass the class of the bean
 	 * @param name an explicit name for the bean

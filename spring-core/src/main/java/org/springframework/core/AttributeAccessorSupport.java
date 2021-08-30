@@ -40,6 +40,7 @@ import org.springframework.util.StringUtils;
 public abstract class AttributeAccessorSupport implements AttributeAccessor, Serializable {
 
 	/** Map with String keys and Object values. */
+	/** 注意才用的数据结构，LinkedHashMap 保持者插入的顺序，难道是希望装配的顺序和解析属性的顺序一致，这个顺序有什么用途？	 */
 	private final Map<String, Object> attributes = new LinkedHashMap<>();
 
 

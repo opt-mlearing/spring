@@ -190,6 +190,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	/**
 	 * Create a new DefaultListableBeanFactory.
 	 */
+	/** DefaultListableBeanFactory 是基础的bean容器 */
 	public DefaultListableBeanFactory() {
 		super();
 	}

@@ -76,6 +76,7 @@ import org.springframework.util.xml.XmlValidationModeDetector;
  * @see org.springframework.beans.factory.support.DefaultListableBeanFactory
  * @see org.springframework.context.support.GenericApplicationContext
  */
+/** xml配置文件的读取是Spring中的重要功能，spring大部分功能都是以配置作为切入点 */
 public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 	/**
@@ -118,6 +119,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	@Nullable
 	private NamespaceHandlerResolver namespaceHandlerResolver;
 
+	/** 定义从资源文件加载到转换为Document的功能 */
 	private DocumentLoader documentLoader = new DefaultDocumentLoader();
 
 	@Nullable
