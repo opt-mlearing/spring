@@ -60,7 +60,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 		implements BeanDefinition, Cloneable {
 
 	/**
-	 * Constant for the default scope name: {@code ""}, equivalent to singleton
+	 * Constant for the default scope name: {@code ""}, equivalent to singleton 『注意：这里使用"" 等于 singleton』
 	 * status unless overridden from a parent bean definition (if applicable).
 	 */
 	public static final String SCOPE_DEFAULT = "";
@@ -69,24 +69,28 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * Constant that indicates no external autowiring at all.
 	 * @see #setAutowireMode
 	 */
+	/** 不自动装配 */
 	public static final int AUTOWIRE_NO = AutowireCapableBeanFactory.AUTOWIRE_NO;
 
 	/**
 	 * Constant that indicates autowiring bean properties by name.
 	 * @see #setAutowireMode
 	 */
+	/** 按名称装配 */
 	public static final int AUTOWIRE_BY_NAME = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;
 
 	/**
 	 * Constant that indicates autowiring bean properties by type.
 	 * @see #setAutowireMode
 	 */
+	/** 按照类型进行装配 */
 	public static final int AUTOWIRE_BY_TYPE = AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE;
 
 	/**
 	 * Constant that indicates autowiring a constructor.
 	 * @see #setAutowireMode
 	 */
+	/** 按照构造方法进行装配 */
 	public static final int AUTOWIRE_CONSTRUCTOR = AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR;
 
 	/**
@@ -103,12 +107,14 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * Constant that indicates no dependency check at all.
 	 * @see #setDependencyCheck
 	 */
+	/** 依赖检查：无依赖 */
 	public static final int DEPENDENCY_CHECK_NONE = 0;
 
 	/**
 	 * Constant that indicates dependency checking for object references.
 	 * @see #setDependencyCheck
 	 */
+	/** 依赖检查：对象间引用 */
 	public static final int DEPENDENCY_CHECK_OBJECTS = 1;
 
 	/**
@@ -116,6 +122,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * @see #setDependencyCheck
 	 * @see org.springframework.beans.BeanUtils#isSimpleProperty
 	 */
+	/** 依赖检查：会核对所有的原始类型和String类型的属性 */
 	public static final int DEPENDENCY_CHECK_SIMPLE = 2;
 
 	/**
@@ -123,6 +130,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * (object references as well as "simple" properties).
 	 * @see #setDependencyCheck
 	 */
+	/** 依赖检查：所有属性 */
 	public static final int DEPENDENCY_CHECK_ALL = 3;
 
 	/**
@@ -142,6 +150,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	private volatile Object beanClass;
 
 	@Nullable
+	/** default value is Singleton */
 	private String scope = SCOPE_DEFAULT;
 
 	private boolean abstractFlag = false;
@@ -234,6 +243,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 		setFactoryMethodName(original.getFactoryMethodName());
 		setRole(original.getRole());
 		setSource(original.getSource());
+		/** class字节码属性拷贝 */
 		copyAttributesFrom(original);
 
 		if (original instanceof AbstractBeanDefinition) {
