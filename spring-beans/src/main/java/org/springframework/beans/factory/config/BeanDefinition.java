@@ -61,6 +61,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * Role hint indicating that a {@code BeanDefinition} is a major part
 	 * of the application. Typically corresponds to a user-defined bean.
 	 */
+	/** 应用程序重要组成部分，通常是用户自己定义的bean */
 	int ROLE_APPLICATION = 0;
 
 	/**
@@ -72,6 +73,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * {@link org.springframework.beans.factory.parsing.ComponentDefinition},
 	 * but not when looking at the overall configuration of an application.
 	 */
+	/** 作为大量配置的一部分（支持、扩展类） */
 	int ROLE_SUPPORT = 1;
 
 	/**
@@ -80,6 +82,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * used when registering beans that are completely part of the internal workings
 	 * of a {@link org.springframework.beans.factory.parsing.ComponentDefinition}.
 	 */
+	/** 内部工作的构造基础 */
 	int ROLE_INFRASTRUCTURE = 2;
 
 
@@ -152,6 +155,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * Set the names of the beans that this bean depends on being initialized.
 	 * The bean factory will guarantee that these beans get initialized first.
 	 */
+	/** 获取依赖, bean factory会保证依赖的对象会被先初始化 */
 	void setDependsOn(@Nullable String... dependsOn);
 
 	/**
@@ -172,6 +176,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	/**
 	 * Return whether this bean is a candidate for getting autowired into some other bean.
 	 */
+	/** 是否自动装配 */
 	boolean isAutowireCandidate();
 
 	/**
