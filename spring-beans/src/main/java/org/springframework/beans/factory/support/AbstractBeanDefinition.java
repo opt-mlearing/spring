@@ -26,6 +26,7 @@ import java.util.function.Supplier;
 
 import org.springframework.beans.BeanMetadataAttributeAccessor;
 import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConstructorArgumentValues;
@@ -56,6 +57,21 @@ import org.springframework.util.StringUtils;
  * @see ChildBeanDefinition
  */
 @SuppressWarnings("serial")
+/**
+ * {@link BeanMetadataAttributeAccessor}是进行BeanMetadata管理的一个基础实现，其功能基本够用.
+ * <p></p>
+ * 目前<p>{@link AbstractBeanDefinition}</p>的重要子类及其继承关系.
+ * 				|
+ * 				|-->{@link ChildBeanDefinition}
+ *                  {@link RootBeanDefinition}  Spring factory 内部运行时使用.
+ *                  		|
+ *                  		|--> {@link org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.ConfigurationClassBeanDefinition}
+ *                  		                                                   表示配置类，注解@Configuation修饰的类内，通过@Bean || @Component等申明的bean
+ *                  {@link GenericBeanDefinition} 扩展对parent BeanDefinition.name的引用
+ *        					|
+ *        					|--> {@link AnnotatedGenericBeanDefinition} --> 通过annotation的方式注入
+ *        						 {@link org.springframework.context.annotation.ScannedGenericBeanDefinition} --> 通过扫包的方式
+ */
 public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccessor
 		implements BeanDefinition, Cloneable {
 

@@ -41,7 +41,7 @@ import org.springframework.util.ObjectUtils;
 public class GenericBeanDefinition extends AbstractBeanDefinition {
 
 	@Nullable
-	private String parentName;
+	private String parentName; /** genericBeanDefinition一个重要的特性，保持对parent beanDefinition的引用 */
 
 
 	/**

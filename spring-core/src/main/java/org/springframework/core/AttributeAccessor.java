@@ -22,12 +22,15 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
- * Interface defining a generic contract for attaching and accessing metadata
+ * Interface defining a generic contract『定约』 for attaching and accessing metadata
  * to/from arbitrary objects.
  *
  * @author Rob Harrop
  * @author Sam Brannen
  * @since 2.0
+ */
+/**
+ * 基础实现类-->{@link org.springframework.beans.BeanMetadataAttributeAccessor}
  */
 public interface AttributeAccessor {
 
@@ -74,7 +77,9 @@ public interface AttributeAccessor {
 		Assert.notNull(name, "Name must not be null");
 		Assert.notNull(computeFunction, "Compute function must not be null");
 		Object value = getAttribute(name);
+		/** 先判空，避免覆盖 */
 		if (value == null) {
+			/** apply的对象是 attribute的name */
 			value = computeFunction.apply(name);
 			Assert.state(value != null,
 					() -> String.format("Compute function must not return null for attribute named '%s'", name));
