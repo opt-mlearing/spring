@@ -107,7 +107,8 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 									(PrivilegedExceptionAction<Constructor<?>>) clazz::getDeclaredConstructor);
 						}
 						else {
-							/** 这里通过反射获取当前类的无参数构造方法,getDeclaredConstructor的入参是空的 */
+							/* 这里通过反射获取当前类的无参数构造方法,getDeclaredConstructor的入参是空的 */
+							/* 这里获取的是类中申明的构造饭方法，因为getDeclaredConstructor是无参传入的，所有这里推断是无参构造方法 */
 							constructorToUse = clazz.getDeclaredConstructor();
 						}
 						bd.resolvedConstructorOrFactoryMethod = constructorToUse;
@@ -117,7 +118,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 					}
 				}
 			}
-			/** 根据构造函数的信息，进行对象实例化 */
+			/** 根据构造函数的信息，进行对象实例化，无参 */
 			return BeanUtils.instantiateClass(constructorToUse);
 		}
 		else {

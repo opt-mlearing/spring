@@ -186,7 +186,7 @@ public class AnnotationConfigWebApplicationContext extends AbstractRefreshableWe
 	 * <p>Configuration class bean definitions are registered with generated bean
 	 * definition names unless the {@code value} attribute is provided to the stereotype
 	 * annotation.
-	 * @param beanFactory the bean factory to load bean definitions into
+	 * @param beanFactory the bean factory to load bean definitions into, bean的容器，将
 	 * @see #register(Class...)
 	 * @see #scan(String...)
 	 * @see #setConfigLocation(String)

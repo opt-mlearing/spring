@@ -47,8 +47,8 @@ import org.springframework.lang.Nullable;
 public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
 
 	/**
-	 * Apply this BeanPostProcessor <i>before the target bean gets instantiated</i>.
-	 * The returned bean object may be a proxy to use instead of the target bean,
+	 * Apply this BeanPostProcessor <i>before the target bean gets instantiated</i>.『在目标bean实例化之前』
+	 * The returned bean object may be a proxy to use instead of the target bean,『此方法返回的Object可能是target bean的一个代理』
 	 * effectively suppressing default instantiation of the target bean.
 	 * <p>If a non-null object is returned by this method, the bean creation process
 	 * will be short-circuited. The only further processing applied is the

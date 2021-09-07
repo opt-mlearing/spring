@@ -151,8 +151,8 @@ public abstract class BeanDefinitionReaderUtils {
 
 	/**
 	 * Register the given bean definition with the given bean factory.
-	 * @param definitionHolder the bean definition including name and aliases
-	 * @param registry the bean factory to register with
+	 * @param definitionHolder the bean definition including name and aliases --> 持有BeanDefinition等信息
+	 * @param registry the bean factory to register with --> 注册工厂
 	 * @throws BeanDefinitionStoreException if registration failed
 	 */
 	public static void registerBeanDefinition(
@@ -161,9 +161,15 @@ public abstract class BeanDefinitionReaderUtils {
 
 		// Register bean definition under primary name.
 		String beanName = definitionHolder.getBeanName();
+		/**
+		 * 所为beanDefinition的注册，就是把beanDefinition的信息存储到bean容器中去，这里的registry.registerBeanDefinition(...)
+		 * 可以看出registry内部肯定存在一种类型的数据结构来存储beanDefinition的信息，
+		 * 经典的概念是：bean的注册器同时也是bean的容器 --> 详见: {@link DefaultListableBeanFactory} 如接口描述，即是容器也是注册器.
+		 */
 		registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());
 
 		// Register aliases for bean name, if any.
+		/** 处理下别名 */
 		String[] aliases = definitionHolder.getAliases();
 		if (aliases != null) {
 			for (String alias : aliases) {

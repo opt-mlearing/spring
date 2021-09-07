@@ -179,7 +179,7 @@ public abstract class BeanUtils {
 	 * non-accessible (that is, non-public) constructor, and supports Kotlin classes
 	 * with optional parameters and default values.
 	 * @param ctor the constructor to instantiate
-	 * @param args the constructor arguments to apply (use {@code null} for an unspecified
+	 * @param args the constructor arguments to apply (use {@code null} for an unspecified{如果需要传入参数，注意构造方法对应的参数顺序 }
 	 * parameter, Kotlin optional parameters and Java primitive types are supported)
 	 * @return the new instance
 	 * @throws BeanInstantiationException if the bean cannot be instantiated

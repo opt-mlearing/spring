@@ -140,7 +140,14 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 							}
 							beforeSingletonCreation(beanName);
 							try {
-								/** 调用bean一系列的BeanPostProcessors过程，进行Bean装配*/
+								/**
+								 * <p>需要先实例化出对象，有了对象以后才可以进行属性装配 or 自定义的更改什么操作</p>
+								 * 调用bean一系列的BeanPostProcessors过程,后置处理过程
+								 * 刚刚实例化出来的对象，进行自动化属性装配等操作，在AbstractAutowireCapableBeanFactory中实现了自动化装配的过程；
+								 * {@link AbstractAutowireCapableBeanFactory#postProcessObjectFromFactoryBean(java.lang.Object, java.lang.String)}
+								 * 而 FactoryBeanRegistrySupport 只有一个透传的空实现.
+								 * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
+								 */
 								object = postProcessObjectFromFactoryBean(object, beanName);
 							}
 							catch (Throwable ex) {
@@ -162,7 +169,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 			}
 		}
 		else {
-			/** FactoryBean */
+			/** 针对FactoryBean */
 			Object object = doGetObjectFromFactoryBean(factory, beanName);
 			if (shouldPostProcess) {
 				try {
