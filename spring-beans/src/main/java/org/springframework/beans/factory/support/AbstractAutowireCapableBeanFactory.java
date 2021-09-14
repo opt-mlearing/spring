@@ -1797,6 +1797,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 * @see #invokeInitMethods
 	 * @see #applyBeanPostProcessorsAfterInitialization
 	 */
+    /**
+     * initial bean main step:
+     * (1){@link BeanPostProcessor#postProcessBeforeInitialization}
+	 * (2){@link AbstractAutowireCapableBeanFactory#invokeInitMethods}
+	 * <></><></> (2.1){@link org.springframework.beans.factory.InitializingBean#afterPropertiesSet}
+	 * <></><></> (2.2){@link AbstractAutowireCapableBeanFactory#invokeCustomInitMethod}
+	 * (3){@link BeanPostProcessor#postProcessAfterInitialization}
+     */
 	protected Object initializeBean(String beanName, Object bean, @Nullable RootBeanDefinition mbd) {
 		if (System.getSecurityManager() != null) {
 			AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
@@ -1815,7 +1823,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		try {
-			// 开始执行bean初始化方法
+			/* step1: 调用初始化方法，afterPropertiesSet和初始化方法的执行顺序就在这个方法里面 */
+			/* step2: 执行bean的初始化方法 */
 			invokeInitMethods(beanName, wrappedBean, mbd);
 		}
 		catch (Throwable ex) {
@@ -1880,6 +1889,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				}
 			}
 			else {
+				/* afterPropertiesSet 在初始化的方法之前调用 */
 				((InitializingBean) bean).afterPropertiesSet();
 			}
 		}
@@ -1889,6 +1899,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			if (StringUtils.hasLength(initMethodName) &&
 					!(isInitializingBean && "afterPropertiesSet".equals(initMethodName)) &&
 					!mbd.isExternallyManagedInitMethod(initMethodName)) {
+                /* 执行初始化方法，明确在afterPropertiesSet方法之后执行 */
 				invokeCustomInitMethod(beanName, bean, mbd);
 			}
 		}
@@ -1901,6 +1912,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 * methods with arguments.
 	 * @see #invokeInitMethods
 	 */
+    /* 执行bean对象的初始化方法 */
 	protected void invokeCustomInitMethod(String beanName, Object bean, RootBeanDefinition mbd)
 			throws Throwable {
 

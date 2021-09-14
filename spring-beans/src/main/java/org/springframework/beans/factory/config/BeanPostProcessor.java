@@ -23,7 +23,7 @@ import org.springframework.lang.Nullable;
  * Factory hook that allows for custom modification of new bean instances &mdash;
  * for example, checking for marker interfaces or wrapping beans with proxies.
  *
- * <p>Typically, post-processors that populate beans via marker interfaces
+ * <p>Typically, post-processors that populate beans via marker interfaces{通过BeanPostProcessor接口进行标记}
  * or the like will implement {@link #postProcessBeforeInitialization},
  * while post-processors that wrap beans with proxies will normally
  * implement {@link #postProcessAfterInitialization}.
@@ -55,6 +55,7 @@ import org.springframework.lang.Nullable;
  * @see ConfigurableBeanFactory#addBeanPostProcessor
  * @see BeanFactoryPostProcessor  Bean的后置处理过程
  */
+/* 当自定义拓展此接口的时候，无论是before还是after过程，有一个规范，@return object中需要wrap一个输入 @param 的Object bean  */
 public interface BeanPostProcessor {
 
 	/**

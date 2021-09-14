@@ -218,6 +218,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	/**
 	 * Names of beans that are currently in creation.
 	 */
+	/* 此处用于缓存一些正在创建期的原型bean，『注意：是处理原型bean的』，且未完成instance实例化过程的bean. */
 	private final ThreadLocal<Object> prototypesCurrentlyInCreation =
 			new NamedThreadLocal<>("Prototype beans currently in creation");
 
@@ -301,6 +302,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		// Eagerly check singleton cache for manually registered singletons.
 		/* 进入到此处的时候，beanDefinition已经注册完毕，该扫描的bean信息应该已经扫描且注册进来 */
 		/* {@link org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton} 获取*/
+		/**
+		 * 首先if分支尝试先从bean容器中获取，若bean是第一次被get（包括容器外调用，或者容器内部其他bean依赖等），肯定是获取不到，
+		 * 那么会在else分之中构造获取beanDefinition，进行实例化，并注册到Bean基础容器中.
+		 */
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
 			if (logger.isTraceEnabled()) {
@@ -311,17 +316,19 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					logger.trace("Returning cached instance of singleton bean '" + beanName + "'");
 				}
 			}
+			/* 从基础容器查找 */
 			beanInstance = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		} else {
 			// Fail if we're already creating this bean instance:
-			// We're assumably within a circular reference.
+			// We're assumption within a circular reference.
+			/* 这里前置判断下是否会产生的原型模式的循环依赖问题，若存在直接抛出异常，Sprin不支持原型bean的循环依赖问题 */
 			if (isPrototypeCurrentlyInCreation(beanName)) {
 				throw new BeanCurrentlyInCreationException(beanName);
 			}
 
 			// Check if bean definition exists in this factory.
 			/* @see org.springframework.beans.factory.support.AbstractBeanFactory.parentBeanFactory is DefaultListableBeanFactory instance */
-			/*  尝试从父bean容器中获取，这里的父容器就是 DefaultListableBeanFactory */
+			/* 尝试从父bean容器中获取，这里的父容器就是 DefaultListableBeanFactory，这里的父容器强调基础容器的层次关系，其实大部分用的都是 DefaultListableBeanFactory */
 			BeanFactory parentBeanFactory = getParentBeanFactory();
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
 				// Not found -> check parent.
@@ -1195,7 +1202,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	/**
 	 * Return whether the specified prototype bean is currently in creation
 	 * (within the current thread).
-	 *
+	 *`
 	 * @param beanName the name of the bean
 	 */
 	protected boolean isPrototypeCurrentlyInCreation(String beanName) {
@@ -1210,6 +1217,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 *
 	 * @param beanName the name of the prototype about to be created
 	 * @see #isPrototypeCurrentlyInCreation
+	 */
+	/**
+	 * 原型bean创建的检查，通过{@link org.springframework.beans.factory.support.AbstractBeanFactory.prototypesCurrentlyInCreation}
+	 * 『注意』Spring中的原型bean不支持循环依赖，
 	 */
 	@SuppressWarnings("unchecked")
 	protected void beforePrototypeCreation(String beanName) {
@@ -1307,7 +1318,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * @return the original bean name
 	 */
 	protected String originalBeanName(String name) {
+		/* beanName统一先处理成正常bean的名字  */
 		String beanName = transformedBeanName(name);
+		/* 根据name判断是否是工厂bean的name */
 		if (name.startsWith(FACTORY_BEAN_PREFIX)) {
 			beanName = FACTORY_BEAN_PREFIX + beanName;
 		}
