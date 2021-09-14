@@ -20,11 +20,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.SimpleBeanDefinitionRegistry;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.testfixture.stereotype.Component;
@@ -46,12 +49,27 @@ public class FactoryBeanTests {
 	private static final Resource ABSTRACT_CONTEXT = qualifiedResource(CLASS, "abstract.xml");
 	private static final Resource CIRCULAR_CONTEXT = qualifiedResource(CLASS, "circular.xml");
 
+	@Test
+	public void testFactoryGedBeanDefinition() {
+		final String factoryBean = "factoryBean";
+		SimpleBeanDefinitionRegistry registry = new SimpleBeanDefinitionRegistry();
+		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(registry);
+		int beforeRegistryCount = registry.getBeanDefinitionCount();
+		Assertions.assertEquals(0, beforeRegistryCount);
+		reader.loadBeanDefinitions(RETURNS_NULL_CONTEXT);
+		int afterRegistryCount = registry.getBeanDefinitionCount();
+		Assertions.assertEquals(1, afterRegistryCount);
+		BeanDefinition beanDefinition = registry.getBeanDefinition(factoryBean);
+		String beanClassName = beanDefinition.getBeanClassName();
+		Assertions.assertEquals("org.springframework.beans.factory.FactoryBeanTests$NullReturningFactoryBean",
+				beanClassName);
+	}
 
 	@Test
 	public void testFactoryBeanReturnsNull() throws Exception {
 		DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
-		new XmlBeanDefinitionReader(factory).loadBeanDefinitions(RETURNS_NULL_CONTEXT);
-
+		int beanDefinitionSize = new XmlBeanDefinitionReader(factory).loadBeanDefinitions(RETURNS_NULL_CONTEXT);
+		Assertions.assertEquals(1, beanDefinitionSize);
 		assertThat(factory.getBean("factoryBean").toString()).isEqualTo("null");
 	}
 
@@ -297,8 +315,7 @@ public class FactoryBeanTests {
 			AtomicInteger c = count.get(beanName);
 			if (c != null) {
 				return c.intValue();
-			}
-			else {
+			} else {
 				return 0;
 			}
 		}
