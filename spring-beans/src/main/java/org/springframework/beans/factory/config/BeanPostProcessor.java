@@ -56,6 +56,7 @@ import org.springframework.lang.Nullable;
  * @see BeanFactoryPostProcessor  Bean的后置处理过程
  */
 /* 当自定义拓展此接口的时候，无论是before还是after过程，有一个规范，@return object中需要wrap一个输入 @param 的Object bean  */
+/*『注意』对比 BeanPostProcessor 和{@link BeanFactoryPostProcessor} */
 public interface BeanPostProcessor {
 
 	/**

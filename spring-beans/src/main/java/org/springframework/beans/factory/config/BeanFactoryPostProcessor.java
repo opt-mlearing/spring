@@ -55,9 +55,42 @@ import org.springframework.beans.BeansException;
  *
  * @author Juergen Hoeller
  * @author Sam Brannen
- * @since 06.07.2003
  * @see BeanPostProcessor
  * @see PropertyResourceConfigurer
+ * @since 06.07.2003
+ * <p>
+ * 关于spring的生命周期
+ * <p>
+ * 关于spring的生命周期
+ */
+/**
+ * 关于spring的生命周期的理解：
+ * 主要分为四个步骤：
+ * （1）实例化 Instantiation
+ * （2）属性赋值 Populate
+ * （3）初始化 Initialization
+ * （4）销毁 Destruction
+ * 实例化 -> 属性赋值 -> 初始化 -> 销毁
+ *
+ */
+
+/**
+ * 『注意』对比 BeanFactoryPostProcessor和{@link BeanPostProcessor}
+ * 这两个接口，都属于Spring初始化bean时对外暴露的扩展点. 这两个接口名称看起很相似，但是作用及其使用场景却不同。
+ * 『BeanFactoryPostProcessor』
+ * <></>实现该接口，可以在spring的bean创建之前，修改bean的定义属性。也就是说,Spring允许BeanFactoryPostProcessor在容器实例任何其bean
+ * <></>之前读取配置元数据，并可以根据需要进行修改，例如可以把bean的scope从single改位prototype，也可以把property的值修改掉。
+ * <></>同时可以配置多个 BeanFactoryPostProcessor，并通过设置"order"属性来控制各个 BeanFactoryPostProcessor的执行次序.
+ * <></>beanFactoryPostFactory是在 spring 容器加载了bean的定文件之后，在bean实例化之前执行的没.
+ * {@link ConfigurableListableBeanFactory} 可以获取到相关Bean的信息.
+ * Spring中内置『BeanFactoryPostProcessor』三个重要的实现类：用来注册自定义的属性编辑器.
+ * BeanFactoryPostProcessor
+ *         |————> {@link PropertyPlaceholderConfigurer}
+ *         |————> {@link PropertyOverrideConfigurer}
+ *         |————> {@link CustomEditorConfigurer}
+ * <p></p>
+ * BeanPostProcessor 可以在spring容器实例化bean之后，在执行bean的初始化方法之
+ *
  */
 @FunctionalInterface
 public interface BeanFactoryPostProcessor {
