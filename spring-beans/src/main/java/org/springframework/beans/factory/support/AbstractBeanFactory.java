@@ -296,6 +296,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			String name, @Nullable Class<T> requiredType, @Nullable Object[] args, boolean typeCheckOnly)
 			throws BeansException {
 
+		/* 获取下bean标准限定名称，首先根据入参bean的name,到别名记录中匹配查找 */
 		String beanName = transformedBeanName(name);
 		Object beanInstance;
 
@@ -360,6 +361,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 				/* 获取 rootBeanDefinition */
 				RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
+				/* 就检查了下是否是抽象类，接口也算抽象类 */
 				checkMergedBeanDefinition(mbd, beanName, args);
 
 				// Guarantee initialization of beans that the current bean depends on.
@@ -1202,7 +1204,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	/**
 	 * Return whether the specified prototype bean is currently in creation
 	 * (within the current thread).
-	 *`
+	 * `
+	 *
 	 * @param beanName the name of the bean
 	 */
 	protected boolean isPrototypeCurrentlyInCreation(String beanName) {
@@ -1587,13 +1590,21 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			throws CannotLoadBeanClassException {
 
 		try {
+			/* 除非外层有设置 class；若无，第一次进来，这里应该是 faslse */
 			if (mbd.hasBeanClass()) {
 				return mbd.getBeanClass();
 			}
+			/**
+			 * System.getSecurityManager --> javd安全管理器，当运行未知的java程序时候，该程序可能有恶意代码（删除系统文件、重启系统等），
+			 * 为了防止运行恶意代码对系统产生影响， 需要对运行的代码的权限进行控制，这个时候需要启动java安全管理器.
+			 *
+			 */
 			if (System.getSecurityManager() != null) {
+				/* 临时扩大权限 */
 				return AccessController.doPrivileged((PrivilegedExceptionAction<Class<?>>)
 						() -> doResolveBeanClass(mbd, typesToMatch), getAccessControlContext());
 			} else {
+				/* 实际获取的入口 */
 				return doResolveBeanClass(mbd, typesToMatch);
 			}
 		} catch (PrivilegedActionException pae) {
@@ -1606,10 +1617,19 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		}
 	}
 
+	/**
+	 * 在这里获取BeanDefitition的对应的Class对象.
+	 *
+	 * @param mbd
+	 * @param typesToMatch
+	 * @return
+	 * @throws ClassNotFoundException
+	 */
 	@Nullable
 	private Class<?> doResolveBeanClass(RootBeanDefinition mbd, Class<?>... typesToMatch)
 			throws ClassNotFoundException {
 
+		/* 获取类加载器 */
 		ClassLoader beanClassLoader = getBeanClassLoader();
 		ClassLoader dynamicLoader = beanClassLoader;
 		boolean freshResolve = false;
@@ -1630,6 +1650,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 		}
 
+		/* 从beanDefition中获取bean对应的class名称，是类的全限定名 */
 		String className = mbd.getBeanClassName();
 		if (className != null) {
 			Object evaluated = evaluateBeanDefinitionString(className, mbd);

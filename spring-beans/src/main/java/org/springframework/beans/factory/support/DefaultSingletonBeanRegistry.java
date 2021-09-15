@@ -204,7 +204,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					if (singletonObject == null) {
 						singletonObject = this.earlySingletonObjects.get(beanName);
 						if (singletonObject == null) {
-							// 尝试获取 BeanFactory
+							// 尝试获取 Factory中查找
 							ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 							if (singletonFactory != null) {
 								// 通过单例工厂获取对应的单例bean，此时的instance还未完成属性注入和 bean的初始化
@@ -281,7 +281,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					if (recordSuppressedExceptions) {
 						this.suppressedExceptions = null;
 					}
-					// 创建完成之后，将beanName从singletonsCurrentlyInCreation移出，若移出失败也可能抛出异常.
+					// 创建完成之后，将beanName从singletonsCurrentlyInCreation移出，若移出失败也可能抛出异常. 创建失败就销毁
 					afterSingletonCreation(beanName);
 				}
 				if (newSingleton) {

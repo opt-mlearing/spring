@@ -258,6 +258,7 @@ public abstract class ClassUtils {
 			return clazz;
 		}
 
+		/* 在这里会逐层拆解复杂的类对象，然后递归调用 ClassUtils.forName(...) */
 		// "java.lang.String[]" style arrays
 		if (name.endsWith(ARRAY_SUFFIX)) {
 			String elementClassName = name.substring(0, name.length() - ARRAY_SUFFIX.length());
@@ -281,9 +282,17 @@ public abstract class ClassUtils {
 
 		ClassLoader clToUse = classLoader;
 		if (clToUse == null) {
+			/**
+			 * 默认的类加载器获取顺序为：
+			 * （1）获取当前线程的上下文环境使用的类加载；
+			 * （2）获取执行类的累加器；
+			 * （3）获取ClassLoader的java安全管理器的类加载；
+			 * 若都获取不到，就GG，会是什么情况下？其实是保证百分百能获取到的？
+			 */
 			clToUse = getDefaultClassLoader();
 		}
 		try {
+			/* 最终还是通过java反射获取类对象 */
 			return Class.forName(name, false, clToUse);
 		}
 		catch (ClassNotFoundException ex) {

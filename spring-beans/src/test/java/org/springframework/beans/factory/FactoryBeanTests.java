@@ -16,17 +16,20 @@
 
 package org.springframework.beans.factory;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
 import org.springframework.beans.factory.support.SimpleBeanDefinitionRegistry;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.Resource;
@@ -50,19 +53,35 @@ public class FactoryBeanTests {
 	private static final Resource CIRCULAR_CONTEXT = qualifiedResource(CLASS, "circular.xml");
 
 	@Test
-	public void testFactoryGedBeanDefinition() {
-		final String factoryBean = "factoryBean";
-		SimpleBeanDefinitionRegistry registry = new SimpleBeanDefinitionRegistry();
-		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(registry);
-		int beforeRegistryCount = registry.getBeanDefinitionCount();
+	public void testMockJustEasyBeanFactoryProcess() throws ClassNotFoundException, NoSuchMethodException,
+			InvocationTargetException, InstantiationException, IllegalAccessException {
+		final String beanName = "factoryBean";
+		/* get bean definition */
+		SimpleBeanDefinitionRegistry beanDefinitionRegistry = new SimpleBeanDefinitionRegistry();
+		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanDefinitionRegistry);
+		int beforeRegistryCount = beanDefinitionRegistry.getBeanDefinitionCount();
 		Assertions.assertEquals(0, beforeRegistryCount);
 		reader.loadBeanDefinitions(RETURNS_NULL_CONTEXT);
-		int afterRegistryCount = registry.getBeanDefinitionCount();
+		int afterRegistryCount = beanDefinitionRegistry.getBeanDefinitionCount();
 		Assertions.assertEquals(1, afterRegistryCount);
-		BeanDefinition beanDefinition = registry.getBeanDefinition(factoryBean);
+		/* 不做设置，默认就是单例模式 */
+		BeanDefinition beanDefinition = beanDefinitionRegistry.getBeanDefinition(beanName);
+		System.out.println("bean definition class " + beanDefinition.getClass().getSimpleName());
+		Assertions.assertTrue(Objects.nonNull(beanDefinition));
 		String beanClassName = beanDefinition.getBeanClassName();
 		Assertions.assertEquals("org.springframework.beans.factory.FactoryBeanTests$NullReturningFactoryBean",
 				beanClassName);
+		Class<?> beanClass = Class.forName(beanClassName);
+		Constructor<?> declaredConstructor = beanClass.getDeclaredConstructor();
+		NullReturningFactoryBean beanObject = (NullReturningFactoryBean) declaredConstructor.newInstance();
+		Assertions.assertTrue(Objects.nonNull(beanObject));
+		/* get bean factory */
+		DefaultSingletonBeanRegistry beanRegistry = new DefaultSingletonBeanRegistry();
+		Object beforeRegistry = beanRegistry.getSingleton(beanName);
+		Assertions.assertTrue(Objects.isNull(beforeRegistry));
+		beanRegistry.registerSingleton(beanName, beanObject);
+		Object afterRegistry = beanRegistry.getSingleton(beanName);
+		Assertions.assertTrue(Objects.nonNull(afterRegistry));
 	}
 
 	@Test
