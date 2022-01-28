@@ -85,28 +85,28 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * Constant that indicates no external autowiring at all.
 	 * @see #setAutowireMode
 	 */
-	/** 不自动装配 */
+	/** 不自动装配, 手动注入, 默认情况下加载的均为 AUTOWIRE_NO=0 */
 	public static final int AUTOWIRE_NO = AutowireCapableBeanFactory.AUTOWIRE_NO;
 
 	/**
 	 * Constant that indicates autowiring bean properties by name.
 	 * @see #setAutowireMode
 	 */
-	/** 按名称装配 */
+	/** 按名称装配，通过名字自动注入 AUTOWIRE_BY_NAME=1 */
 	public static final int AUTOWIRE_BY_NAME = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;
 
 	/**
 	 * Constant that indicates autowiring bean properties by type.
 	 * @see #setAutowireMode
 	 */
-	/** 按照类型进行装配 */
+	/** 按照类型进行装配，通过类型自动注入，AUTOWIRE_BY_TYPE=2 */
 	public static final int AUTOWIRE_BY_TYPE = AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE;
 
 	/**
 	 * Constant that indicates autowiring a constructor.
 	 * @see #setAutowireMode
 	 */
-	/** 按照构造方法进行装配 */
+	/** 按照构造方法进行装配，通过构造方法自动注入，AUTOWIRE_CONSTRUCTOR=3 */
 	public static final int AUTOWIRE_CONSTRUCTOR = AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR;
 
 	/**
