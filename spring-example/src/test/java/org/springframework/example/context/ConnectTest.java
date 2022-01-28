@@ -8,6 +8,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.example.config.ApplicationConfig;
 import org.springframework.example.domain.A;
 import org.springframework.example.domain.B;
+import org.springframework.example.domain.C;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,6 +44,35 @@ public class ConnectTest {
 		B b = (B) context.getBean("b");
 		log.info("get bean b {} by Name", b);
 		Assert.assertTrue(beanB.hashCode() == b.hashCode());
+	}
+
+	@Test
+	public void testGetInnerClassBean() {
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+		context.register(C.class);
+		context.register(C.D.class);
+		context.refresh();
+		C.D bean = context.getBean(C.D.class);
+		log.info("bean {}", bean);
+	}
+
+	@Test
+	public void testGetInnerStaticClassBean() {
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+		context.register(C.class);
+		context.register(C.E.class);
+		context.refresh();
+		C.E bean = context.getBean(C.E.class);
+		log.info("bean {}", bean);
+	}
+
+	@Test
+	public void testGetInnerStaticClassBeanWithOutConstructArgument() {
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+		context.register(C.F.class);
+		context.refresh();
+		C.F bean = context.getBean(C.F.class);
+		log.info("bean {}", bean);
 	}
 
 }
