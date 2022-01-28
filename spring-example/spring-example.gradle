@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+}
+
+group 'org.springframework'
+version '5.3.10-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile(project(":spring-context"))
+    compile(project(":spring-core"))
+    compile(project(":spring-beans"))
+    // log dependent
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+    // junit dependent
+    testImplementation group: 'junit', name: 'junit', version: '4.13.1'
+}
+
+test {
+    useJUnitPlatform()
+}
