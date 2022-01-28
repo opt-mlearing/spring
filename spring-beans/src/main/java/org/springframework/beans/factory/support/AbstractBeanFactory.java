@@ -1590,7 +1590,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			throws CannotLoadBeanClassException {
 
 		try {
-			/* 除非外层有设置 class；若无，第一次进来，这里应该是 faslse */
+			/* 除非外层有设置 class；若无，第一次进来，这里应该是 false */
 			if (mbd.hasBeanClass()) {
 				return mbd.getBeanClass();
 			}
@@ -1650,7 +1650,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 		}
 
-		/* 从beanDefition中获取bean对应的class名称，是类的全限定名 */
+		/* 从beanDefinition中获取bean对应的class名称，是类的全限定名 */
 		String className = mbd.getBeanClassName();
 		if (className != null) {
 			Object evaluated = evaluateBeanDefinitionString(className, mbd);

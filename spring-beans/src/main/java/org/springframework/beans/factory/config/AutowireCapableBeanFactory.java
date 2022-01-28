@@ -63,7 +63,7 @@ import org.springframework.lang.Nullable;
 public interface AutowireCapableBeanFactory extends BeanFactory {
 
 	/**
-	 * Constant that indicates no externally defined autowiring. Note that
+	 * Constant that indicates no externally[外部地；外表上，外形上] defined autowiring. Note that
 	 * BeanFactoryAware etc and annotation-driven injection will still be applied.
 	 * @see #createBean
 	 * @see #autowire
