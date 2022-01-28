@@ -3,7 +3,7 @@ package org.springframework.example.domain;
 import org.springframework.stereotype.Component;
 
 /**
- * TODO
+ * test sample.
  *
  * @author caogaoli
  * @date 2022/1/28上午11:35

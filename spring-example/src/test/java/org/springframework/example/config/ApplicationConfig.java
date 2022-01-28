@@ -3,7 +3,7 @@ package org.springframework.example.config;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
- * TODO
+ * test application configuration.
  *
  * @author caogaoli
  * @date 2022/1/28上午11:34
