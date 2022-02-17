@@ -29,6 +29,7 @@ public interface BeanDefinitionCustomizer {
 
 	/**
 	 * Customize the given bean definition.
+	 * 可以获取beanDefinition 对象并针对该beanDefinition做一些设置.
 	 */
 	void customize(BeanDefinition bd);
 

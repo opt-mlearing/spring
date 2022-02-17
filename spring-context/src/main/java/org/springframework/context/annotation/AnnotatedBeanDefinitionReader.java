@@ -250,19 +250,25 @@ public class AnnotatedBeanDefinitionReader {
 			@Nullable Class<? extends Annotation>[] qualifiers, @Nullable Supplier<T> supplier,
 			@Nullable BeanDefinitionCustomizer[] customizers) {
 
+		// AnnotatedGenericBeanDefinition是GenericBeanDefinition扩展类，
+		// 扩展了AnnotatedBeanDefinition接口，使实现改接口实体具备承载annotation元数据信息的能力.
 		AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(beanClass);
+		// 配置类是否存在加载顺序先后依赖.
 		if (this.conditionEvaluator.shouldSkip(abd.getMetadata())) {
 			return;
 		}
-
+		// 配置supplier
 		abd.setInstanceSupplier(supplier);
 		ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
+		// 配置作用域
 		abd.setScope(scopeMetadata.getScopeName());
+		// 调用beanName生成器得到beanName --》 beanNameGenerator 可自定义并通过xxxContent相关方法传入.
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
-
+		/** 在beanDefinition {@Param abd} 中填充常用的一些Annotation的信息 */
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
 		if (qualifiers != null) {
 			for (Class<? extends Annotation> qualifier : qualifiers) {
+				// @Primary
 				if (Primary.class == qualifier) {
 					abd.setPrimary(true);
 				}
@@ -276,12 +282,14 @@ public class AnnotatedBeanDefinitionReader {
 		}
 		if (customizers != null) {
 			for (BeanDefinitionCustomizer customizer : customizers) {
+				// 回调BeanDefinitionCustomizer#customize接口，可对需要注册的bean--》BeanDefinition作一定的修改.
 				customizer.customize(abd);
 			}
 		}
-
+		// 把beanDefinition信息&bean名称信息包装到beanDefinitionHolder中，准备下一步 bean实例化过程.
 		BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
 		definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
+		// 注册beanDefinition--》将beanDefinition信息放入到 beanDefinitionMap中完成注册.
 		BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
 	}
 
