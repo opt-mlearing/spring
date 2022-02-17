@@ -29,14 +29,14 @@ import org.springframework.beans.BeansException;
  * out-of-the-box solutions that address such configuration needs.
  *
  * <p>A {@code BeanFactoryPostProcessor} may interact with and modify bean
- * definitions, but never bean instances. Doing so may cause premature bean
+ * definitions, but never bean instances（这个阶段Bean还只是BeanDefinition，而不是一个实例化的bean对象）. Doing so may cause premature bean
  * instantiation, violating the container and causing unintended side-effects.
  * If bean instance interaction is required, consider implementing
- * {@link BeanPostProcessor} instead.
+ * {@link BeanPostProcessor} instead --》{BeanPostProcessor是对完成实例化的对象进行后置处理}.
  *
  * <h3>Registration</h3>
  * <p>An {@code ApplicationContext} auto-detects {@code BeanFactoryPostProcessor}
- * beans in its bean definitions and applies them before any other beans get created.
+ * beans in its bean definitions and applies them before any other beans get created{在Bean创建之前操作}.
  * A {@code BeanFactoryPostProcessor} may also be registered programmatically
  * with a {@code ConfigurableApplicationContext}.
  *

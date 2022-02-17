@@ -81,6 +81,7 @@ final class PostProcessorRegistrationDelegate {
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
 
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
+				// 这里有特殊处理
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
 					BeanDefinitionRegistryPostProcessor registryProcessor =
 							(BeanDefinitionRegistryPostProcessor) postProcessor;
@@ -144,6 +145,9 @@ final class PostProcessorRegistrationDelegate {
 			}
 
 			// Now, invoke the postProcessBeanFactory callback of all processors handled so far.
+			// 这里开始执行的 BeanFactoryPostProcessor#postProcessBeanFactory 的方法，这里存在两次执行
+			// 首先，优先执行扩展了BeanDefinitionRegistryPostProcessor的实例方法;
+			// 其次，再执行仅仅扩展了 BeanFactoryPostProcessor的实例方法;
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);
 		}
