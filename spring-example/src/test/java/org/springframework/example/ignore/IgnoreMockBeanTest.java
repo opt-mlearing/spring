@@ -10,8 +10,11 @@ import org.framework.example.mock.ignore.MockB;
 import org.framework.example.mock.ignore.MockC;
 import org.framework.example.postprocessor.IgnoreDependencyInterfacePostProcessor;
 import org.framework.example.postprocessor.IgnoreDependencyTypePostProcessor;
+import org.framework.example.postprocessor.MockBeanMergedBeanDefinitionPostProcessor;
+import org.framework.example.postprocessor.MockBeanPostProcessor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +52,6 @@ public class IgnoreMockBeanTest {
 		Assertions.assertTrue(Objects.nonNull(mockC));
 	}
 
-
 	@Test
 	public void testIgnoreType() {
 		final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
@@ -73,6 +75,30 @@ public class IgnoreMockBeanTest {
 		Assertions.assertTrue(Objects.isNull(mockA));
 		Assertions.assertTrue(Objects.isNull(mockB));
 		Assertions.assertTrue(Objects.nonNull(mockC));
+	}
+
+	@Test
+	public void testGetCurrentStackTrace() {
+		final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		for (int index = 0; index < stackTrace.length; ++index) {
+			StackTraceElement element = stackTrace[index];
+			log.debug("invoker class {} -- method {}", element.getClassName(), element.getMethodName());
+		}
+	}
+
+	@Test
+	public void testBeanPostProcessorInvokerSequence() {
+		// 获取BeanPostProcessor相关的执行顺序.
+		final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+		context.scan("org.framework.example.mock.ignore");
+		// acquire bean factory.
+		final ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
+		beanFactory.addBeanPostProcessor(new MockBeanPostProcessor(false));
+		final MockBeanMergedBeanDefinitionPostProcessor composeBeanFactoryAndBeanPostProcessor =
+				new MockBeanMergedBeanDefinitionPostProcessor(false);
+		beanFactory.addBeanPostProcessor(composeBeanFactoryAndBeanPostProcessor);
+		context.addBeanFactoryPostProcessor(composeBeanFactoryAndBeanPostProcessor);
+		context.refresh();
 	}
 
 }
