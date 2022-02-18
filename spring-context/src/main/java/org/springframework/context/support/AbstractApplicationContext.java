@@ -570,12 +570,15 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				beanPostProcess.end();
 
 				// Initialize message source for this context.
+				// 在Spring容器中初始化一些国际化相关的属性.
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
+				// 在spring容器中初始化事件广播器，事件广播器用于事件发布.
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
+				// 一个模板方法，不同的的Spring容器做不同的事情.
 				onRefresh();
 
 				// Check for listener beans and register them.
@@ -855,6 +858,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * <p>This implementation is empty.
 	 * @throws BeansException in case of errors
 	 * @see #refresh()
+	 */
+	/**
+	 * 这是一个模板方法，不同的Spring容器做不同的事情。
+	 * 例如，web程序的容器AnnotationConfigEmbedWebApplicationContext中会调用
+	 * createEmbeddedWebApplicationContext方法去创建内置的Servlet容器，比如启动tomcat.
 	 */
 	protected void onRefresh() throws BeansException {
 		// For subclasses: do nothing by default.

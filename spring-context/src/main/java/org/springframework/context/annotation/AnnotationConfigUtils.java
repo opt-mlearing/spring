@@ -234,6 +234,11 @@ public abstract class AnnotationConfigUtils {
 		processCommonDefinitionAnnotations(abd, abd.getMetadata());
 	}
 
+	/**
+	 * 根据封装好的metadata，填充BeanDefinition实例属性.
+	 * @param abd
+	 * @param metadata
+	 */
 	static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd, AnnotatedTypeMetadata metadata) {
 		AnnotationAttributes lazy = attributesFor(metadata, Lazy.class);
 		if (lazy != null) {

@@ -66,7 +66,7 @@ public interface ClassMetadata {
 
 	/**
 	 * Determine whether the underlying class is independent, i.e. whether
-	 * it is a top-level class or a nested class (static inner class) that
+	 * it is a top-level class or a nested class[嵌套类] (static inner class) that
 	 * can be constructed independently from an enclosing class.
 	 */
 	boolean isIndependent();
