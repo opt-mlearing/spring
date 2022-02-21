@@ -54,9 +54,11 @@ import org.springframework.util.Assert;
 @SuppressWarnings("serial")
 public class RootBeanDefinition extends AbstractBeanDefinition {
 
+	/* beanDefinitionHolder 存储Bean的beanDefinition实例化对象、名称、别名 */
 	@Nullable
 	private BeanDefinitionHolder decoratedDefinition;
 
+	/* annotationElement 是java反射包的接口，通过它可以查看 Bean 的注解信息 */
 	@Nullable
 	private AnnotatedElement qualifiedElement;
 
@@ -79,6 +81,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	volatile Boolean isFactoryBean;
 
 	/** Package-visible field for caching the return type of a generically typed factory method. */
+	/* 缓存Class，表示RootBeanDefinition存储哪个类的信息 */
 	@Nullable
 	volatile ResolvableType factoryMethodReturnType;
 
@@ -93,13 +96,16 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/** Common lock for the four constructor fields below. */
 	final Object constructorArgumentLock = new Object();
 
+	/* 用于缓存已解析的构造方法或工厂方法 */
 	/** Package-visible field for caching the resolved constructor or factory method. */
 	@Nullable
 	Executable resolvedConstructorOrFactoryMethod;
 
+	/* 标记构造方法是否已经解析 */
 	/** Package-visible field that marks the constructor arguments as resolved. */
 	boolean constructorArgumentsResolved = false;
 
+	/* 缓存已经完成解析好的构造方法的参数. */
 	/** Package-visible field for caching fully resolved constructor arguments. */
 	@Nullable
 	Object[] resolvedConstructorArguments;
@@ -111,19 +117,24 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/** Common lock for the two post-processing fields below. */
 	final Object postProcessingLock = new Object();
 
+	/* 表明是否被 MergedBeanDefinitionPostProcessor 处理过 */
 	/** Package-visible field that indicates MergedBeanDefinitionPostProcessor having been applied. */
 	boolean postProcessed = false;
 
+	/* 在生成代理的时候会使用，表明是否已经生成代理 */
 	/** Package-visible field that indicates a before-instantiation post-processor having kicked in. */
 	@Nullable
 	volatile Boolean beforeInstantiationResolved;
 
+	/* 实际缓存的类型是 Construct、Filed、Method类型 */
 	@Nullable
 	private Set<Member> externallyManagedConfigMembers;
 
+	/* 执行{@see org.springframework.beans.factory.InitializingBean.afterPropertiesSet} 方法回调的参数名会记录在此 */
 	@Nullable
 	private Set<String> externallyManagedInitMethods;
 
+	/* 执行{@see org.springframework.beans.factory.DisposableBean.destroy} 方法回调的参数名会记录在此 */
 	@Nullable
 	private Set<String> externallyManagedDestroyMethods;
 

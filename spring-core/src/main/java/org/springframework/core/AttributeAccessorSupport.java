@@ -40,10 +40,15 @@ import org.springframework.util.StringUtils;
 public abstract class AttributeAccessorSupport implements AttributeAccessor, Serializable {
 
 	/** Map with String keys and Object values. */
-	/** 注意才用的数据结构，LinkedHashMap 保持者插入的顺序，难道是希望装配的顺序和解析属性的顺序一致，这个顺序有什么用途？	 */
+	/** 注意才用的数据结构，LinkedHashMap 保持者插入的顺序，难道是希望装配的顺序和解析属性的顺序一致，这个顺序有什么用途？	*/
+	/** 注意，这里全部的属性信息以LickedHashMap的形式组织并存储 */
 	private final Map<String, Object> attributes = new LinkedHashMap<>();
 
-
+	/**
+	 * 往map当中put一个key/value，如果传一个为null的value等同于remove操作.
+	 * @param name the unique attribute key
+	 * @param value the attribute value to be attached
+	 */
 	@Override
 	public void setAttribute(String name, @Nullable Object value) {
 		Assert.notNull(name, "Name must not be null");
@@ -51,6 +56,7 @@ public abstract class AttributeAccessorSupport implements AttributeAccessor, Ser
 			this.attributes.put(name, value);
 		}
 		else {
+			// if {@param value} == remove operation.
 			removeAttribute(name);
 		}
 	}

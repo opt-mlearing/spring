@@ -22,15 +22,15 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
- * Interface defining a generic contract『定约』 for attaching and accessing metadata
- * to/from arbitrary objects.
+ * Interface defining a generic contract(定约) for attaching and accessing metadata to/from arbitrary objects.
  *
  * @author Rob Harrop
  * @author Sam Brannen
  * @since 2.0
  */
 /**
- * 基础实现类-->{@link org.springframework.beans.BeanMetadataAttributeAccessor}
+ * spring定义的属性访问器，对BeanDefinition的属性进行操作的API。例如设置属性、获取属性、判断是否存在该属性。
+ * 返回bean所有的属性名称等，当然这里的属性指的是程序员额外提供的，其抽象子类使用的是类似Map结构完成存储.
  */
 public interface AttributeAccessor {
 

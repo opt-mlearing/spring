@@ -24,6 +24,7 @@ import org.springframework.lang.Nullable;
  * holding attributes as {@link BeanMetadataAttribute} objects in order
  * to keep track of 『keep track of 跟上...的进展；掌握...的最新信息』 the definition source.
  *
+ *
  * @author Juergen Hoeller
  * @since 2.5
  */
@@ -50,6 +51,7 @@ public class BeanMetadataAttributeAccessor extends AttributeAccessorSupport impl
 
 
 	/**
+	 * 注册属性. 是对AttributeAccessorSupport#setAttribute(java.lang.String, java.lang.Object)的封装.
 	 * Add the given BeanMetadataAttribute to this accessor's set of attributes.
 	 * @param attribute the BeanMetadataAttribute object to register
 	 */

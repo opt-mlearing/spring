@@ -32,12 +32,15 @@ import org.springframework.util.ObjectUtils;
  * {@code ChildBeanDefinition} where parent/child relationships happen to be pre-determined.
  *
  * @author Juergen Hoeller
- * @since 2.5
+ * @since 2.5(keep note)
  * @see #setParentName
  * @see RootBeanDefinition
  * @see ChildBeanDefinition
  */
 @SuppressWarnings("serial")
+/**
+ * 可以单独存在，也可以用来作为子类的beanDefinition
+ */
 public class GenericBeanDefinition extends AbstractBeanDefinition {
 
 	@Nullable

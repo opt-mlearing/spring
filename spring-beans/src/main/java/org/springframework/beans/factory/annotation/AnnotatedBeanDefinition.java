@@ -22,6 +22,11 @@ import org.springframework.core.type.MethodMetadata;
 import org.springframework.lang.Nullable;
 
 /**
+ * 主要用来操作注解元数据，一般情况下通过注解的方式得到Bean（@Component、@Bean），
+ * 其中BeanDefinition类型都是该接口的实现类.
+ */
+
+/**
  * Extended {@link org.springframework.beans.factory.config.BeanDefinition}
  * interface that exposes {@link org.springframework.core.type.AnnotationMetadata}
  * about its bean class - without requiring the class to be loaded yet.
@@ -33,6 +38,7 @@ import org.springframework.lang.Nullable;
  */
 public interface AnnotatedBeanDefinition extends BeanDefinition {
 
+	/* 获取当前的Bean的注解元数据 */
 	/**
 	 * Obtain the annotation metadata (as well as basic class metadata)
 	 * for this bean definition's bean class.
@@ -40,6 +46,7 @@ public interface AnnotatedBeanDefinition extends BeanDefinition {
 	 */
 	AnnotationMetadata getMetadata();
 
+	/* 获取当前bean的工厂方法上的原数据 */
 	/**
 	 * Obtain metadata for this bean definition's factory method, if any.
 	 * @return the factory method metadata, or {@code null} if none

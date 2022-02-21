@@ -85,31 +85,33 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * Constant that indicates no external autowiring at all.
 	 * @see #setAutowireMode
 	 */
-	/** 不自动装配, 手动注入, 默认情况下加载的均为 AUTOWIRE_NO=0 */
+	/* 手动装配, 默认情况下加载的均为 AUTOWIRE_NO=0 */
 	public static final int AUTOWIRE_NO = AutowireCapableBeanFactory.AUTOWIRE_NO;
 
 	/**
 	 * Constant that indicates autowiring bean properties by name.
 	 * @see #setAutowireMode
 	 */
-	/** 按名称装配，通过名字自动注入 AUTOWIRE_BY_NAME=1 */
+	/* 自动装配，通过名字自动注入 AUTOWIRE_BY_NAME=1 */
 	public static final int AUTOWIRE_BY_NAME = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;
 
 	/**
 	 * Constant that indicates autowiring bean properties by type.
 	 * @see #setAutowireMode
 	 */
-	/** 按照类型进行装配，通过类型自动注入，AUTOWIRE_BY_TYPE=2 */
+	/* 自动装配，通过类型自动注入，AUTOWIRE_BY_TYPE=2 */
 	public static final int AUTOWIRE_BY_TYPE = AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE;
 
 	/**
 	 * Constant that indicates autowiring a constructor.
 	 * @see #setAutowireMode
 	 */
-	/** 按照构造方法进行装配，通过构造方法自动注入，AUTOWIRE_CONSTRUCTOR=3 */
+	/* 自动装配，通过构造方法自动注入，AUTOWIRE_CONSTRUCTOR=3 */
 	public static final int AUTOWIRE_CONSTRUCTOR = AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR;
 
 	/**
+	 * 首先，尝试使用 constructor 进行自动装配；
+	 * 如果失败，其次，尝试使用byType进行自动装配；
 	 * Constant that indicates determining an appropriate autowire strategy
 	 * through introspection of the bean class.
 	 * @see #setAutowireMode
@@ -123,14 +125,14 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * Constant that indicates no dependency check at all.
 	 * @see #setDependencyCheck
 	 */
-	/** 依赖检查：无依赖 */
+	/* 依赖检查：不检查依赖 */
 	public static final int DEPENDENCY_CHECK_NONE = 0;
 
 	/**
 	 * Constant that indicates dependency checking for object references.
 	 * @see #setDependencyCheck
 	 */
-	/** 依赖检查：对象间引用 */
+	/* 依赖检查：检查对象依赖 */
 	public static final int DEPENDENCY_CHECK_OBJECTS = 1;
 
 	/**
@@ -138,7 +140,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * @see #setDependencyCheck
 	 * @see org.springframework.beans.BeanUtils#isSimpleProperty
 	 */
-	/** 依赖检查：会核对所有的原始类型和String类型的属性 */
+	/* 依赖检查：检查原始类型，包含基本类型、String、集合 */
 	public static final int DEPENDENCY_CHECK_SIMPLE = 2;
 
 	/**
@@ -146,7 +148,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * (object references as well as "simple" properties).
 	 * @see #setDependencyCheck
 	 */
-	/** 依赖检查：所有属性 */
+	/* 依赖检查：检查所有属性 */
 	public static final int DEPENDENCY_CHECK_ALL = 3;
 
 	/**
@@ -161,7 +163,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 */
 	public static final String INFER_METHOD = "(inferred)";
 
-
+	/* 存储bean的class对象 */
 	@Nullable
 	private volatile Object beanClass;
 
@@ -174,8 +176,10 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	@Nullable
 	private Boolean lazyInit;
 
+	/* 注意，这里注入类型默认为手动注入. */
 	private int autowireMode = AUTOWIRE_NO;
 
+	/* 注意：默认不检查 */
 	private int dependencyCheck = DEPENDENCY_CHECK_NONE;
 
 	@Nullable
@@ -214,12 +218,16 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	@Nullable
 	private String destroyMethodName;
 
+	/* 是否执行初始化方法，默认执行 */
 	private boolean enforceInitMethod = true;
 
+	/* 是否执行销毁方法，默认执行 */
 	private boolean enforceDestroyMethod = true;
 
+	/* 是否合成方法? */
 	private boolean synthetic = false;
 
+	/* 默认是用户自定义 */
 	private int role = BeanDefinition.ROLE_APPLICATION;
 
 	@Nullable
